@@ -9,6 +9,8 @@ resource "aws_codepipeline" "pipeline" {
     type     = "S3"
   }
 
+  # The "Source" stage is in charge of fetching our project's source code
+  # from GitHub.
   stage {
     name = "Source"
 
@@ -28,6 +30,11 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
+  # The "Build" stage turns our source code into a nicely-packaged Docker
+  # image.  This relies on the AWS CodeBuild service and a `buildspec.yml`
+  # file in the project which explains how to build it.  You should copy
+  # the `buildspec.yml` file from the phpBB project; it does some tricky
+  # stuff to tag the Docker images with the git commit ID.
   stage {
     name = "Build"
 
@@ -45,8 +52,12 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
-  // TODO: Deploy to a staging URL first?
-  
+  # TODO: Should we add a "StagingDeploy" stage, where we deploy to a test
+  # server?  This would allow us to inspect how the new image is running
+  # before deploying it.
+
+  # The "Approval" stage shows a button in the web UI that we can click to
+  # approve the changes.
   stage {
     name = "Approval"
 
@@ -68,6 +79,11 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
+  # The "Deploy" stage uses a tiny JavaScript program (see the directory
+  # "ecs_deployer_lambda") to generate a new ECS task definition and update
+  # the ECS service that's in charge of finding a server on which to run
+  # our code.  This will automatically cause the existing version to be
+  # shut down and a new version to be spun up.
   stage {
     name = "Deploy"
 
