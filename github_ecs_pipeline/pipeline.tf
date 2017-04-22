@@ -24,7 +24,6 @@ resource "aws_codepipeline" "pipeline" {
         Owner      = "language-learners"
         Repo       = "${var.github_repo}"
         Branch     = "${var.github_branch}"
-        OAuthToken = "${var.github_oauth_token}"
       }
     }
   }

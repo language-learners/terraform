@@ -24,6 +24,7 @@ You'll need to set the following variables in your shell:
 ```sh
 export AWS_ACCESS_KEY_ID="..."
 export AWS_SECRET_ACCESS_KEY="..."
+export GITHUB_TOKEN="..."
 ```
 
 ## Generating and appling a terraform plan

@@ -1,20 +1,9 @@
-# This file defines all of our pipelines for building Docker images.  You
-# should be able to add new ones by copying the examples here.
+# Share declarations used by all pipelines.  For the individual pipelines,
+# look in the `*_pipeline.tf` files.
 
-# The phpbb pipeline which builds our forum image.
-module "phpbb_pipeline" {
-  source = "github_ecs_pipeline"
-  name = "phpbb"
-  github_repo = "phpbb"
-  github_branch = "custom"
-
-  # Standard parameters which are the same for all pipelines.
-  github_oauth_token = "${var.github_oauth_token}"
-  aws_region = "${var.aws_region}"
-  aws_account_id = "${var.aws_account_id}"
-  pipeline_role_arn = "arn:aws:iam::771600087445:role/AWS-CodePipeline-Service"
-  build_role_arn = "${aws_iam_role.codebuild_role.arn}"
-  artifact_store_s3_bucket = "${aws_s3_bucket.codepipeline_artifacts.bucket}"
+# The ECS cluster which we'll use to deploy our applications.
+resource "aws_ecs_cluster" "language_learners" {
+  name = "language-learners"
 }
 
 # The S3 bucket used to store the build artifacts created by CodePipeline.

@@ -13,10 +13,6 @@ variable "github_branch" {
   default = "master"
 }
 
-variable "github_oauth_token" {
-  description = "The OAuth token used to access GitHub repositories."
-}
-
 variable "aws_region" {
   description = "The AWS region in which our ECR repository is hosted."
 }
@@ -36,3 +32,16 @@ variable "build_role_arn" {
 variable "artifact_store_s3_bucket" {
   description = "The S3 bucket in which to store pipeline artifacts."
 }
+
+variable "ecs_cluster" {
+  description = "The name of the ECS cluster on which to deploy this service."
+}
+
+variable "taskdef_family" {
+  description = "The family name of the taskdef we use."
+}
+
+variable "taskdef_revision" {
+  description = "The revision of the taskdef that we defined using Terraform.  Usually overriden by deployment pipelines."
+}
+
