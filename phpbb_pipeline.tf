@@ -18,6 +18,7 @@ module "phpbb_pipeline" {
   build_role_arn = "${aws_iam_role.codebuild_role.arn}"
   artifact_store_s3_bucket = "${aws_s3_bucket.codepipeline_artifacts.bucket}"
   ecs_cluster = "${aws_ecs_cluster.language_learners.name}"
+  notification_topic_arn = "${aws_sns_topic.admin_updates.arn}"
 }
 
 # Load our container definitions from a template file.

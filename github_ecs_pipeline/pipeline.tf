@@ -45,6 +45,29 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
+  // TODO: Deploy to a staging URL first?
+  
+  stage {
+    name = "Approval"
+
+    action {
+      name            = "Approval"
+      category        = "Approval"
+      owner           = "AWS"
+      provider        = "Manual"
+      input_artifacts = []
+      version         = "1"
+
+      configuration {
+        "NotificationArn" = "${var.notification_topic_arn}"
+        # If we have a staging server, we could include a URL so that we could
+        # check it out before approving.
+        #"ExternalEntityLink" = "http://staging-${var.name}.language-learners.org/"
+        "CustomData" = "A new ${var.name} image is ready to be deployed, but it requires manual approval."
+      }
+    }
+  }
+
   stage {
     name = "Deploy"
 

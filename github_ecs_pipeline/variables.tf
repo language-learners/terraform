@@ -45,3 +45,6 @@ variable "taskdef_revision" {
   description = "The revision of the taskdef that we defined using Terraform.  Usually overriden by deployment pipelines."
 }
 
+variable "notification_topic_arn" {
+  description = "The ARN of an SNS notification topic that will receive messages when something interesting happens."
+}
