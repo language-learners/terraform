@@ -6,6 +6,7 @@
 resource "aws_lambda_function" "ecs_deployer_lambda" {
   filename         = "ecs_deployer_lambda.zip"
   function_name    = "ecs_deployer_lambda"
+  description      = "Called by CodePipeline to update an ECS service."
   role             = "${aws_iam_role.ecs_deployer_lambda.arn}"
   handler          = "index.handler"
   source_code_hash = "${base64sha256(file("ecs_deployer_lambda.zip"))}"
