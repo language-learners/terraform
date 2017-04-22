@@ -78,6 +78,14 @@ resource "aws_iam_role_policy" "codebuild_role" {
             ],
             "Resource": "*",
             "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "codepipeline:GetPipelineState",
+                "codepipeline:GetPipelineExecution"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
         }      
     ]
 }

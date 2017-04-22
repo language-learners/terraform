@@ -44,4 +44,30 @@ resource "aws_codepipeline" "pipeline" {
       }
     }
   }
+
+  stage {
+    name = "Deploy"
+
+    action {
+      name            = "Deploy"
+      category        = "Invoke"
+      owner           = "AWS"
+      provider        = "Lambda"
+      input_artifacts = []
+      version         = "1"
+
+      configuration {
+        "FunctionName" = "ecs_deployer_lambda"
+        # Pass these arguments in as a JSON string, because we can only
+        # pass a string.  We'll parse them in the lambda code.
+        "UserParameters" = <<EOD
+{
+  "ecsCluster": "${var.ecs_cluster}",
+  "ecsService": "${var.name}",
+  "ecsRegion": "${var.aws_region}"
+}
+EOD
+      }
+    }
+  }
 }

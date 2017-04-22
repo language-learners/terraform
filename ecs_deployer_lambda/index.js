@@ -4,24 +4,42 @@ const async = require('async');
 
 // Export a handler to be called from ECS.
 exports.handler = (event, context, callback) => {
-  const ecsCluster = 'language-learners';
-  const ecsService = 'phpbb';
-  const ecsRegion = 'us-east-1';
-  const imageTag = '7c05000a-a357-483d-a839-cedd3b0031a3';
+  // Get our CodePipeline job information from the event.
+  const job = event['CodePipeline.job'];
+  console.log("Job:", job);
+
+  // Fetch our `UserParameters`, parse them as JSON, and extract the values
+  // we'll need.
+  const params_json = job.data.actionConfiguration.configuration.UserParameters;
+  const params = JSON.parse(params_json);
+  const ecsCluster = params.ecsCluster;
+  const ecsService = params.ecsService;
+  const pipelineName = ecsService;
+  const ecsRegion = params.ecsRegion;
 
   // Configure the AWS APIs that we'll need to use.
+  const codepipeline = new aws.CodePipeline();
   const ecs = new aws.ECS({ region: ecsRegion });
 
   // Declare some variables we want to pass between stages of our
   // "waterfall," below.
   const images = [];
+  let imageTag;
+  let summary;
 
   // Use `async.waterfall` to run a chained series of callbacks, giving up
   // early if there's an error.
   async.waterfall([
 
-    // Look up our ECS service.
+    // Get our git commit ID.
     (callback) => {
+      codepipeline.getPipelineState({ "name": pipelineName }, callback);
+    },
+
+    // Save our git commit ID as our image tag, and look up our ECS service.
+    (data, callback) => {
+      console.log("Stage info:", data.stageStates[0].actionStates[0]);
+      imageTag = data.stageStates[0].actionStates[0].currentRevision.revisionId;
       const query = {
         cluster: ecsCluster,
         services: [ecsService]
@@ -74,16 +92,35 @@ exports.handler = (event, context, callback) => {
       ecs.updateService(update, callback);
     },
 
-    // Return a summary of what we did.
+    // Summarize what we did, and attempt to tell CodePipeline about it.
     (data, callback) => {
       const service = data.service;
-      console.log("Updated service:", service.serviceName, service.taskDefinition);
-      callback(null, {
+      summary = {
         cluster: ecsCluster,
         service: service.serviceName,
         taskDefinition: service.taskDefinition,
         images: images
-      });
+      };
+      console.log("Updated service:", summary);
+      codepipeline.putJobSuccessResult({ jobId: job.id }, callback);
     }
-  ], callback); // Pass results to the callback provided by AWS Lambda.
+  ], (err, result) => { // Handle the result of our waterfall.
+    if (err) {
+      // We failed somewhere, so report it to CodePipeline.
+      console.log("Error:", err, err.stack);
+      const failure = {
+        jobId: job.id,
+        failureDetails: {
+          message: JSON.stringify(err),
+          type: 'JobFailed',
+          externalExecutionId: context.invokeid
+        }
+      };
+      codepipeline.putJobFailureResult(failure, callback);
+    } else {
+      console.log("Success");
+      // We succeeded, so return our summary.
+      callback(null, summary);
+    }
+  });
 };
