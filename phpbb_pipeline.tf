@@ -24,7 +24,7 @@ module "phpbb_pipeline" {
 data "template_file" "phpbb_container_definitions" {
   template = "${file("${path.module}/phpbb-container-definitions.json")}"
   vars {
-    image = "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:task-definition/phpbb:latest"
+    image = "771600087445.dkr.ecr.us-east-1.amazonaws.com/phpbb:latest"
   }
 }
 
