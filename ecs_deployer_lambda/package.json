@@ -1,0 +1,14 @@
+{
+  "name": "ecs_deployer_lambda",
+  "version": "0.0.1",
+  "description": "An AWS Lambda function for updating ECS services from CodePipeline.",
+  "main": "index.js",
+  "author": "Eric Kidd <git@randomhacks.net>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.3.0"
+  },
+  "scripts": {
+    "package": "zip -r ../ecs_deployer_lambda.zip ."
+  }
+}
