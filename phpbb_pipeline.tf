@@ -14,7 +14,7 @@ module "phpbb_pipeline" {
   # Standard parameters which are the same for all pipelines.
   aws_region = "${var.aws_region}"
   aws_account_id = "${var.aws_account_id}"
-  pipeline_role_arn = "arn:aws:iam::771600087445:role/AWS-CodePipeline-Service"
+  pipeline_role_arn = "${aws_iam_role.codepipeline_role.arn}"
   build_role_arn = "${aws_iam_role.codebuild_role.arn}"
   artifact_store_s3_bucket = "${aws_s3_bucket.codepipeline_artifacts.bucket}"
   ecs_cluster = "${aws_ecs_cluster.language_learners.name}"
@@ -40,22 +40,22 @@ resource "aws_ecs_task_definition" "phpbb" {
   # `*-container-definitions.json` file.
   volume {
     name = "cache"
-    host_path = "/data/cache"
+    host_path = "/data/phpbb/cache"
   }
   volume {
     name = "files"
-    host_path = "/data/files"
+    host_path = "/data/phpbb/files"
   }
   volume {
     name = "store"
-    host_path = "/data/store"
+    host_path = "/data/phpbb/store"
   }
   volume {
     name = "images"
-    host_path = "/data/images"
+    host_path = "/data/phpbb/images"
   }
   volume {
     name = "config-files"
-    host_path = "/data/config-files"
+    host_path = "/data/phpbb/config-files"
   }
 }
