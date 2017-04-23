@@ -88,6 +88,11 @@ build and deployment pipelines. For example:
 
 ![Screenshot of a CodePipeline pipeline with Source, Build, Approve and Deploy stages](./images/llo-full-pipeline.png)
 
+Note that we do _not_ recommend CodePipeline over alternatives like
+TravisCI or GoCD.  CodePipeline has a number of unfortunate limitations and
+it's a nuisance to set up.  But if you need to centralize all billing on
+one account, it's good enough to get by.
+
 [CodePipeline]: https://aws.amazon.com/codepipeline/
 [git-crypt]: https://github.com/AGWA/git-crypt
 [GPG]: https://www.gnupg.org/
