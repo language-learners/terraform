@@ -63,6 +63,11 @@ mkdir /data
 echo "/dev/xvdf /data ext4 noatime 0 0" >> /etc/fstab
 mount /data
 
+# Restart Docker so that it sees /data, and make sure ECS is running after
+# the Docker restart.
+sudo service docker restart
+sudo start ecs
+  
 # Apply the latest security updates.  We do this after setting up our
 # volume, just in case some security update wants to start Docker.  We need
 # to guarantee that Docker is started _after_ the volume is mounted, or
