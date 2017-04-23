@@ -1,11 +1,6 @@
 # Share declarations used by all pipelines.  For the individual pipelines,
 # look in the `*_pipeline.tf` files.
 
-# The ECS cluster which we'll use to deploy our applications.
-resource "aws_ecs_cluster" "language_learners" {
-  name = "language-learners"
-}
-
 # The S3 bucket used to store the build artifacts created by CodePipeline.
 resource "aws_s3_bucket" "codepipeline_artifacts" {
   bucket = "llorg-codepipeline-artifacts"
