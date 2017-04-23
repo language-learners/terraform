@@ -51,6 +51,10 @@ terraform apply plan.tfplan
 
 ...which will update all our AWS resources as described in the plan.
 
+This process will typically look something like:
+
+![Screenshot of Terraform planning and applying a DNS update](./images/llo-terraform-in-action.png)
+
 ## Terraform modules
 
 Many of the subdirectories of this project contain "modules", which
@@ -77,6 +81,14 @@ These aren't managed by Terraform because they contain persistent data that
 we don't want to be accidentally destroyed by sloppy refactorings or user
 error.
 
+## Pipelines
+
+These Terraform definitions are based around the idea of [CodePipeline][]
+build and deployment pipelines. For example:
+
+![Screenshot of a CodePipeline pipeline with Source, Build, Approve and Deploy stages](./images/llo-full-pipeline.png)
+
+[CodePipeline]: https://aws.amazon.com/codepipeline/
 [git-crypt]: https://github.com/AGWA/git-crypt
 [GPG]: https://www.gnupg.org/
 [Terraform]: https://www.terraform.io/
