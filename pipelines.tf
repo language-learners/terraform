@@ -3,7 +3,7 @@
 
 # The S3 bucket used to store the build artifacts created by CodePipeline.
 resource "aws_s3_bucket" "codepipeline_artifacts" {
-  bucket = "llorg-codepipeline-artifacts"
+  bucket = "${var.domain_abbrev}-codepipeline-artifacts"
   acl    = "private"
 }
 

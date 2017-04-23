@@ -60,6 +60,23 @@ calling `module` and passing it a series of parameters.
 By convention, the parameters of a module are described in a file named
 `$MODULE_NAME/variables.tf`, and all parameters should be documented.
 
+## Testing this on your own account.
+
+To test this on your own account, delete `terraform.tfstate` and
+`secrets.tf`, and edit `variables.tf` to use your own domain names, etc.
+You'll need to set up the security credential environment variables as
+described above.
+
+Then, create the following resources manually in your account:
+
+- An RDS server running MySQL, with the databases required by your containers.
+- An EBS volume with the name "language-learners:/data", with the files
+  required by your containers.
+
+These aren't managed by Terraform because they contain persistent data that
+we don't want to be accidentally destroyed by sloppy refactorings or user
+error.
+
 [git-crypt]: https://github.com/AGWA/git-crypt
 [GPG]: https://www.gnupg.org/
 [Terraform]: https://www.terraform.io/

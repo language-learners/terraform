@@ -73,7 +73,7 @@ resource "aws_codepipeline" "pipeline" {
         "NotificationArn" = "${var.notification_topic_arn}"
         # If we have a staging server, we could include a URL so that we could
         # check it out before approving.
-        #"ExternalEntityLink" = "http://staging-${var.name}.language-learners.org/"
+        #"ExternalEntityLink" = "http://staging-${var.name}.${var.domain}/"
         "CustomData" = "A new ${var.name} image is ready to be deployed, but it requires manual approval."
       }
     }

@@ -2,7 +2,7 @@
 
 # Our main DNS zone.
 resource "aws_route53_zone" "primary" {
-  name = "language-learners.org"
+  name = "${var.domain}"
   comment = "Managed via https://github.com/language-learners/terraform/blob/master/dns.tf"
 }
 
