@@ -16,10 +16,10 @@ resource "aws_route53_record" "forum" {
   # For now, point this at a temporary server, until we finish migrating
   # completely onto this account.  Once the migration is done, delete this
   # and uncomment the records below.
-  records = ["34.204.9.245"]
+  #records = ["34.204.9.245"]
   
   # Get the IP address of our server's Elastic IP.
-  #records = ["${module.language_learners_server.public_ip}"]
+  records = ["${module.language_learners_server.public_ip}"]
 }
 
 # A temporary "forum" record while we're migrating.
@@ -29,6 +29,15 @@ resource "aws_route53_record" "temp-forum" {
   type    = "A"
   ttl     = "300"
   records = ["${module.language_learners_server.public_ip}"]
+}
+
+# An "old-forum" record while we're migrating.
+resource "aws_route53_record" "old-forum" {
+  zone_id = "${aws_route53_zone.primary.zone_id}"
+  name    = "old-forum"
+  type    = "A"
+  ttl     = "300"
+  records = ["34.204.9.245"]
 }
 
 # Our "www" record, still pointing to the old setup, but we'll update this
