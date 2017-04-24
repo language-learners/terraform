@@ -13,21 +13,7 @@ resource "aws_route53_record" "forum" {
   type    = "A"
   ttl     = "300"
 
-  # For now, point this at a temporary server, until we finish migrating
-  # completely onto this account.  Once the migration is done, delete this
-  # and uncomment the records below.
-  #records = ["34.204.9.245"]
-  
   # Get the IP address of our server's Elastic IP.
-  records = ["${module.language_learners_server.public_ip}"]
-}
-
-# A temporary "forum" record while we're migrating.
-resource "aws_route53_record" "temp-forum" {
-  zone_id = "${aws_route53_zone.primary.zone_id}"
-  name    = "temp-forum"
-  type    = "A"
-  ttl     = "300"
   records = ["${module.language_learners_server.public_ip}"]
 }
 
@@ -47,7 +33,7 @@ resource "aws_route53_record" "www" {
   name    = "www"
   type    = "CNAME"
   ttl     = "300"
-  records = ["how-to-learn-any-language.org"]
+  records = ["language-learners.github.io"]
 }
 
 # Point the bare domain at an S3 bucket that automatically redirects (I think).
