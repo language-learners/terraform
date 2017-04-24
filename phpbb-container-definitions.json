@@ -23,7 +23,7 @@
         "readOnly": null
       },
       {
-        "containerPath": "/var/www/html/file",
+        "containerPath": "/var/www/html/files",
         "sourceVolume": "files",
         "readOnly": null
       },
