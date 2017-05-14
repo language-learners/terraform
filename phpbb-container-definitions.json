@@ -46,7 +46,12 @@
     "name": "phpbb",
     "ulimits": null,
     "dockerSecurityOptions": null,
-    "environment": [],
+    "environment": [
+      {
+        "name": "VIRTUAL_HOST",
+        "value": "forum.language-learners.org"
+      }
+    ],
     "links": null,
     "workingDirectory": null,
     "readonlyRootFilesystem": null,
