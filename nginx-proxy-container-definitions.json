@@ -1,0 +1,91 @@
+[
+  {
+    "name": "nginx-proxy",
+    "image": "jwilder/nginx-proxy",
+    "memory": 128,
+    "essential": true,
+    "portMappings": [
+      {
+        "hostPort": 80,
+        "containerPort": 80,
+        "protocol": "tcp"
+      },
+      {
+        "hostPort": 443,
+        "containerPort": 443,
+        "protocol": "tcp"
+      }
+    ],
+    "environment": [
+      {
+        "name": "DEFAULT_HOST",
+        "value": "forum.language-learners.org"
+      }
+    ],
+    "mountPoints": [
+      {
+        "sourceVolume": "nginx-vhost-d",
+        "containerPath": "/etc/nginx/vhost.d"
+      },
+      {
+        "sourceVolume": "nginx-html",
+        "containerPath": "/usr/share/nginx/html"
+      },
+      {
+        "sourceVolume": "docker-sock",
+        "containerPath": "/tmp/docker.sock",
+        "readOnly": true
+      },
+      {
+        "sourceVolume": "nginx-certs",
+        "containerPath": "/etc/nginx/certs",
+        "readOnly": true
+      }
+    ],
+    "volumesFrom": null,
+    "hostname": null,
+    "user": null,
+    "workingDirectory": null,
+    "extraHosts": null,
+    "logConfiguration": null,
+    "ulimits": null,
+    "dockerLabels": {
+      "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy": "true"
+    }
+  },
+  {
+    "name": "letsencrypt-nginx-proxy-companion",
+    "image": "jrcs/letsencrypt-nginx-proxy-companion",
+    "memory": 64,
+    "essential": true,
+    "portMappings": [],
+    "environment": null,
+    "mountPoints": [
+      {
+        "sourceVolume": "nginx-vhost-d",
+        "containerPath": "/etc/nginx/vhost.d"
+      },
+      {
+        "sourceVolume": "nginx-html",
+        "containerPath": "/usr/share/nginx/html"
+      },
+      {
+        "sourceVolume": "docker-sock",
+        "containerPath": "/var/run/docker.sock",
+        "readOnly": true
+      },
+      {
+        "sourceVolume": "nginx-certs",
+        "containerPath": "/etc/nginx/certs",
+        "readOnly": false
+      }
+    ],
+    "hostname": null,
+    "user": null,
+    "workingDirectory": null,
+    "extraHosts": null,
+    "logConfiguration": null,
+    "ulimits": null,
+    "dockerLabels": null
+  }
+]

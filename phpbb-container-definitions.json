@@ -6,13 +6,7 @@
     "dnsServers": null,
     "disableNetworking": null,
     "dnsSearchDomains": null,
-    "portMappings": [
-      {
-        "hostPort": 80,
-        "containerPort": 80,
-        "protocol": "tcp"
-      }
-    ],
+    "portMappings": [],
     "hostname": null,
     "essential": true,
     "entryPoint": null,
@@ -50,6 +44,14 @@
       {
         "name": "VIRTUAL_HOST",
         "value": "forum.language-learners.org"
+      },
+      {
+        "name": "LETSENCRYPT_HOST",
+        "value": "forum.language-learners.org"
+      },
+      {
+        "name": "LETSENCRYPT_EMAIL",
+        "value": "letsencrypt@randomhacks.net"
       }
     ],
     "links": null,
