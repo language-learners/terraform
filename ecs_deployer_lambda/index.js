@@ -60,8 +60,12 @@ exports.handler = (event, context, callback) => {
       //console.log("taskDefinition:", taskDefinition);
 
       // Figure out which containers need to be updated, and update them.
+      // This will only work for containers that are either:
+      //
+      // 1. Named after our service.
+      // 2. Have a name which starts with the service name plus "-".
       for (const container of taskDefinition.containerDefinitions) {
-        if (container.name === ecsService) {
+        if (container.name === ecsService || container.name.indexOf(ecsService + "-") === 0) {
           //console.log(container);
           const newImage = container.image.replace(/:([^:]*)$/, ":" + imageTag);
           console.log("Updating container to use new image:", container.name, newImage);

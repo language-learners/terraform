@@ -1,0 +1,82 @@
+[
+  {
+    "volumesFrom": [],
+    "memory": 128,
+    "extraHosts": null,
+    "dnsServers": null,
+    "disableNetworking": null,
+    "dnsSearchDomains": null,
+    "portMappings": [],
+    "hostname": null,
+    "essential": true,
+    "entryPoint": null,
+    "mountPoints": [
+      {
+        "containerPath": "/var/www/html/config-files",
+        "sourceVolume": "config-files",
+        "readOnly": true
+      }
+    ],
+    "name": "superchallengebot",
+    "ulimits": null,
+    "dockerSecurityOptions": null,
+    "environment": [
+      {
+        "name": "VIRTUAL_HOST",
+        "value": "super-challenge.language-learners.org"
+      },
+      {
+        "name": "LETSENCRYPT_HOST",
+        "value": "super-challenge.language-learners.org"
+      },
+      {
+        "name": "LETSENCRYPT_EMAIL",
+        "value": "letsencrypt@randomhacks.net"
+      }
+    ],
+    "links": null,
+    "workingDirectory": null,
+    "readonlyRootFilesystem": null,
+    "image": "${image}",
+    "command": null,
+    "user": null,
+    "dockerLabels": null,
+    "logConfiguration": null,
+    "cpu": 0,
+    "privileged": null,
+    "memoryReservation": null
+  },
+  {
+    "volumesFrom": [],
+    "memory": 64,
+    "extraHosts": null,
+    "dnsServers": null,
+    "disableNetworking": null,
+    "dnsSearchDomains": null,
+    "portMappings": [],
+    "hostname": null,
+    "essential": true,
+    "entryPoint": null,
+    "mountPoints": [
+      {
+        "containerPath": "/var/www/html/config-files",
+        "sourceVolume": "config-files",
+        "readOnly": true
+      }
+    ],
+    "name": "superchallengebot-cron",
+    "ulimits": null,
+    "dockerSecurityOptions": null,
+    "links": null,
+    "workingDirectory": null,
+    "readonlyRootFilesystem": null,
+    "image": "${image}",
+    "command": ["/var/www/html/worker"],
+    "user": null,
+    "dockerLabels": null,
+    "logConfiguration": null,
+    "cpu": 0,
+    "privileged": null,
+    "memoryReservation": null
+  }
+]

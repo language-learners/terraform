@@ -17,6 +17,17 @@ resource "aws_route53_record" "forum" {
   records = ["${module.language_learners_server.public_ip}"]
 }
 
+# Our "super-challenge" record.
+resource "aws_route53_record" "super_challenge" {
+  zone_id = "${aws_route53_zone.primary.zone_id}"
+  name    = "super-challenge"
+  type    = "A"
+  ttl     = "300"
+
+  # Get the IP address of our server's Elastic IP.
+  records = ["${module.language_learners_server.public_ip}"]
+}
+
 # An "old-forum" record while we're migrating.
 resource "aws_route53_record" "old-forum" {
   zone_id = "${aws_route53_zone.primary.zone_id}"
