@@ -4,13 +4,15 @@
 module "phpbb_pipeline" {
   source = "github_ecs_pipeline"
   name = "phpbb"
+  host = "forum.language-learners.org"
   github_repo = "phpbb"
   github_branch = "custom"
+  listener_rule_priority = 99
 
   # Pass our taskdef information to the module.
   taskdef_family = "${aws_ecs_task_definition.phpbb.family}"
   taskdef_revision = "${aws_ecs_task_definition.phpbb.revision}"
-  
+
   # Standard parameters which are the same for all pipelines.
   aws_region = "${var.aws_region}"
   aws_account_id = "${var.aws_account_id}"
@@ -19,6 +21,8 @@ module "phpbb_pipeline" {
   artifact_store_s3_bucket = "${aws_s3_bucket.codepipeline_artifacts.bucket}"
   ecs_cluster = "${aws_ecs_cluster.language_learners.name}"
   notification_topic_arn = "${aws_sns_topic.admin_updates.arn}"
+  zone_id = "${aws_route53_zone.primary.zone_id}"
+  listener_arn = "${aws_lb_listener.web_sites_https.arn}"
 }
 
 # Load our container definitions from a template file.

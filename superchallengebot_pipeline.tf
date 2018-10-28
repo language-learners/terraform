@@ -5,8 +5,10 @@
 module "superchallengebot_pipeline" {
   source = "github_ecs_pipeline"
   name = "superchallengebot"
+  host = "super-challenge.language-learners.org"
   github_repo = "superchallengebot"
   github_branch = "master"
+  listener_rule_priority = 100
 
   # Pass our taskdef information to the module.
   taskdef_family = "${aws_ecs_task_definition.superchallengebot.family}"
@@ -20,6 +22,8 @@ module "superchallengebot_pipeline" {
   artifact_store_s3_bucket = "${aws_s3_bucket.codepipeline_artifacts.bucket}"
   ecs_cluster = "${aws_ecs_cluster.language_learners.name}"
   notification_topic_arn = "${aws_sns_topic.admin_updates.arn}"
+  zone_id = "${aws_route53_zone.primary.zone_id}"
+  listener_arn = "${aws_lb_listener.web_sites_https.arn}"
 }
 
 # Load our container definitions from a template file.

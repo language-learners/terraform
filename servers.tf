@@ -7,7 +7,7 @@ module "language_learners_server" {
 
   name                  = "language-learners"
   ami                   = "${data.aws_ami.ecs_ami.id}"
-  instance_type         = "t2.micro"
+  instance_type         = "t2.small"
   ecs_cluster           = "${aws_ecs_cluster.language_learners.name}"
   vpc_security_group_id = "${aws_security_group.web_server.id}"
 
@@ -29,20 +29,13 @@ resource "aws_security_group" "web_server" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow inbound HTTP traffic.
+  # Allow inbound container traffic.
   ingress {
-    from_port   = 80
-    to_port     = 80
+    # This is supposedly the port range for automatically assigned ports.
+    from_port   = 32768
+    to_port     = 61000
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Allow inbound HTTPS traffic.
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = ["${aws_security_group.load_balancer.id}"]
   }
 
   # Allow all outbound traffic.

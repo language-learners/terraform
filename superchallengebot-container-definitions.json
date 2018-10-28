@@ -6,7 +6,11 @@
     "dnsServers": null,
     "disableNetworking": null,
     "dnsSearchDomains": null,
-    "portMappings": [],
+    "portMappings": [
+      {
+        "containerPort": 80
+      }
+    ],
     "hostname": null,
     "essential": true,
     "entryPoint": null,
@@ -21,18 +25,6 @@
     "ulimits": null,
     "dockerSecurityOptions": null,
     "environment": [
-      {
-        "name": "VIRTUAL_HOST",
-        "value": "super-challenge.language-learners.org"
-      },
-      {
-        "name": "LETSENCRYPT_HOST",
-        "value": "super-challenge.language-learners.org"
-      },
-      {
-        "name": "LETSENCRYPT_EMAIL",
-        "value": "letsencrypt@randomhacks.net"
-      }
     ],
     "links": null,
     "workingDirectory": null,

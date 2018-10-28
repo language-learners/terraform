@@ -4,6 +4,10 @@ variable "name" {
   description = "The name of the pipeline, and the image it builds."
 }
 
+variable "host" {
+  description = "The hostname to use for this service."
+}
+
 variable "github_repo" {
   description = "The name of the GitHub repository we build."
 }
@@ -43,6 +47,18 @@ variable "taskdef_family" {
 
 variable "taskdef_revision" {
   description = "The revision of the taskdef that we defined using Terraform.  Usually overriden by deployment pipelines."
+}
+
+variable "zone_id" {
+  description = "The DNS zone ID to use for HTTPS certificate confirmation."
+}
+
+variable "listener_arn" {
+  description = "The HTTPS listener associated with our load balancer."
+}
+
+variable "listener_rule_priority" {
+  description = "The priority for the listener rule on our load balancer. Must be unique."
 }
 
 variable "notification_topic_arn" {

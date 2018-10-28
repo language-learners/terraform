@@ -11,10 +11,12 @@ resource "aws_route53_record" "forum" {
   zone_id = "${aws_route53_zone.primary.zone_id}"
   name    = "forum"
   type    = "A"
-  ttl     = "300"
 
-  # Get the IP address of our server's Elastic IP.
-  records = ["${module.language_learners_server.public_ip}"]
+  alias {
+    name                   = "${aws_lb.web_sites.dns_name}"
+    zone_id                = "${aws_lb.web_sites.zone_id}"
+    evaluate_target_health = false
+  }
 }
 
 # Our "super-challenge" record.
@@ -22,10 +24,12 @@ resource "aws_route53_record" "super_challenge" {
   zone_id = "${aws_route53_zone.primary.zone_id}"
   name    = "super-challenge"
   type    = "A"
-  ttl     = "300"
 
-  # Get the IP address of our server's Elastic IP.
-  records = ["${module.language_learners_server.public_ip}"]
+  alias {
+    name                   = "${aws_lb.web_sites.dns_name}"
+    zone_id                = "${aws_lb.web_sites.zone_id}"
+    evaluate_target_health = false
+  }
 }
 
 # An "old-forum" record while we're migrating.
@@ -37,8 +41,7 @@ resource "aws_route53_record" "old-forum" {
   records = ["34.204.9.245"]
 }
 
-# Our "www" record, still pointing to the old setup, but we'll update this
-# soon to point to a Jekyll-based blog.
+# Our "www" record, pointing to a blog hosted on GitHub Pages.
 resource "aws_route53_record" "www" {
   zone_id = "${aws_route53_zone.primary.zone_id}"
   name    = "www"

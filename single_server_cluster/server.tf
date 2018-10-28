@@ -29,7 +29,7 @@ resource "aws_instance" "server" {
   associate_public_ip_address = true
   iam_instance_profile        = "${aws_iam_instance_profile.instance_profile.name}"
   key_name                    = "aldebaran-emk"
-  
+
   # The user_data script will be run when the instance boots up.  This is
   # where we want to stick all customization and configuration, which
   # should be very minimal, because all the real work is done by ECS and
@@ -38,13 +38,17 @@ resource "aws_instance" "server" {
 #!/bin/bash
 
 # Fail immediately if there are errors.
-set -euo pipefail  
+set -euo pipefail
 
-# Configure our ECS cluster membership.  
-echo ECS_CLUSTER="${var.ecs_cluster}" >> /etc/ecs/ecs.config
+# Configure our ECS cluster membership.
+cat <<EOC >> /etc/ecs/ecs.config
+ECS_CLUSTER=${var.ecs_cluster}
+ECS_ENABLE_CONTAINER_METADATA=true
+ECS_ENABLE_TASK_CPU_MEM_LIMIT=false
+EOC
 
 # Install tools needed for this script.
-yum -y install aws-cli  
+yum -y install aws-cli
 
 # Look up our instance ID using the AWS magic metadata address, and use it
 # to attach our EBS volume.  Note that we tell this to mount as /dev/sdf, but
@@ -67,7 +71,7 @@ mount /data
 # the Docker restart.
 sudo service docker restart
 sudo start ecs
-  
+
 # Apply the latest security updates.  We do this after setting up our
 # volume, just in case some security update wants to start Docker.  We need
 # to guarantee that Docker is started _after_ the volume is mounted, or
@@ -81,7 +85,7 @@ yum -y update
 # hacked.
 #
 # TODO: Configure automatic reboot after kernel updates?
-yum -y install yum-cron  
+yum -y install yum-cron
 EOD
 
   tags {
