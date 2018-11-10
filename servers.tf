@@ -35,7 +35,8 @@ resource "aws_security_group" "web_server" {
     from_port   = 32768
     to_port     = 61000
     protocol    = "tcp"
-    security_groups = ["${aws_security_group.load_balancer.id}"]
+    //security_groups = ["${aws_security_group.load_balancer.id}"]
+    cidr_blocks = ["172.31.0.0/16"]
   }
 
   # Allow all outbound traffic.

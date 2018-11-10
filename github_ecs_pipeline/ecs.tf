@@ -19,8 +19,11 @@ resource "aws_ecs_service" "service" {
   name            = "${var.name}"
   cluster         = "${var.ecs_cluster}"
 
-  # We only want to run one copy of this container.
-  desired_count   = 1
+  # How many copies of this container do we want to run?
+  desired_count   = "${var.desired_count}"
+
+  # Wait a while for the application to start up.
+  health_check_grace_period_seconds = "60"
 
   # This part is a bit tricky.  This first time we're run, we want to use
   # the basic task definition defined above.  But on subsequent runs, we

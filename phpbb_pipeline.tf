@@ -8,6 +8,7 @@ module "phpbb_pipeline" {
   github_repo = "phpbb"
   github_branch = "custom"
   listener_rule_priority = 99
+  desired_count = 3
 
   # Pass our taskdef information to the module.
   taskdef_family = "${aws_ecs_task_definition.phpbb.family}"

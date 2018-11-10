@@ -41,6 +41,11 @@ variable "ecs_cluster" {
   description = "The name of the ECS cluster on which to deploy this service."
 }
 
+variable "desired_count" {
+  description = "The number of containers to run."
+  default = 1
+}
+
 variable "taskdef_family" {
   description = "The family name of the taskdef we use."
 }
