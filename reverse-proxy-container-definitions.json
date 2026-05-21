@@ -1,0 +1,50 @@
+[
+  {
+    "name": "caddy-proxy",
+    "image": "lucaslorentz/caddy-docker-proxy:0.2-alpine",
+    "memory": 128,
+    "essential": true,
+    "portMappings": [
+      {
+        "hostPort": 80,
+        "containerPort": 80,
+        "protocol": "tcp"
+      },
+      {
+        "hostPort": 443,
+        "containerPort": 443,
+        "protocol": "tcp"
+      },
+      {
+        "hostPort": 2015,
+        "containerPort": 2015,
+        "protocol": "tcp"
+      }
+    ],
+    "environment": [
+    ],
+    "mountPoints": [
+      {
+        "sourceVolume": "docker-sock",
+        "containerPath": "/var/run/docker.sock",
+        "readOnly": true
+      },
+      {
+        "sourceVolume": "caddy",
+        "containerPath": "/root/.caddy",
+        "readOnly": false
+      }
+    ],
+    "volumesFrom": null,
+    "hostname": null,
+    "user": null,
+    "workingDirectory": null,
+    "extraHosts": null,
+    "logConfiguration": null,
+    "ulimits": null,
+    "dockerLabels": {
+      "caddy.log": "stdout"
+    },
+    "command": ["-ca=https://acme-staging.api.letsencrypt.org/directory", "-email=letsencrypt@randomhacks.net", "-agree=true", "-log=stdout"]
+  }
+]

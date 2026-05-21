@@ -3,11 +3,11 @@
 
 # Our main forum server at language-learners.org.
 module "language_learners_server" {
-  source = "single_server_cluster"
+  source = "./single_server_cluster"
 
   name                  = "language-learners"
   ami                   = "${data.aws_ami.ecs_ami.id}"
-  instance_type         = "t2.small"
+  instance_type         = "m1.large"
   ecs_cluster           = "${aws_ecs_cluster.language_learners.name}"
   vpc_security_group_id = "${aws_security_group.web_server.id}"
 

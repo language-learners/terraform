@@ -13,7 +13,7 @@ variable "ami" {
 
 variable "instance_type" {
   description = "The EC2 instance type to use for this machine."
-  default = "t2.micro"
+  default = "c6g.medium"
 }
 
 variable "vpc_security_group_id" {
@@ -32,4 +32,4 @@ variable "aws_region" {
   description = "The region in which we're deploying our server."
 }
 
-  
+
