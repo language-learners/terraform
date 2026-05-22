@@ -28,7 +28,7 @@ resource "aws_instance" "server" {
   vpc_security_group_ids      = ["${var.vpc_security_group_id}"]
   associate_public_ip_address = true
   iam_instance_profile        = "${aws_iam_instance_profile.instance_profile.name}"
-  key_name                    = "aldebaran-emk"
+  key_name                    = "prometheus-emk-202605"
 
   # The user_data script will be run when the instance boots up.  This is
   # where we want to stick all customization and configuration, which
@@ -41,42 +41,39 @@ resource "aws_instance" "server" {
 set -euo pipefail
 
 # Configure our ECS cluster membership.
-cat <<EOC >> /etc/ecs/ecs.config
+cat <<EOC > /etc/ecs/ecs.config
 ECS_CLUSTER=${var.ecs_cluster}
 ECS_ENABLE_CONTAINER_METADATA=true
-ECS_ENABLE_TASK_CPU_MEM_LIMIT=false
 EOC
 
-# Install tools needed for this script.
-yum -y install aws-cli
+# Get an IMDSv2 token
+token=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
 
 # Look up our instance ID using the AWS magic metadata address, and use it
 # to attach our EBS volume.  Note that we tell this to mount as /dev/sdf, but
-# it actually shows up as /dev/xvdf.
-instance_id="$(curl http://169.254.169.254/latest/meta-data/instance-id)"
+# it actually shows up under some other name, like /dev/nvme1n1. We try to
+# use /dev/disk/by-id/... for more stable naming, below.
+instance_id=$(curl -H "X-aws-ec2-metadata-token: $token" http://169.254.169.254/latest/meta-data/instance-id)
 aws ec2 --region ${var.aws_region} attach-volume \
   --volume-id ${data.aws_ebs_volume.data.id} \
   --instance-id  "$instance_id" \
   --device /dev/sdf
 
 # Wait for the EBS volume to attach.
-while [ ! -e /dev/xvdf ]; do sleep 1; done
+while [ ! -e /dev/disk/by-id/nvme-Amazon_Elastic_Block_Store_vol065b604060e304d27 ]; do sleep 1; done
 
 # Create a mount point, add the volume to fstab, and mount it.
 mkdir /data
-echo "/dev/xvdf /data ext4 noatime 0 0" >> /etc/fstab
+echo "/dev/disk/by-id/nvme-Amazon_Elastic_Block_Store_vol065b604060e304d27 /data ext4 noatime 0 0" >> /etc/fstab
 mount /data
-
-# Restart Docker so that it sees /data, and make sure ECS is running after
-# the Docker restart.
-sudo service docker restart
-sudo start ecs
 
 # Apply the latest security updates.  We do this after setting up our
 # volume, just in case some security update wants to start Docker.  We need
 # to guarantee that Docker is started _after_ the volume is mounted, or
 # containers may not see the volume.
-yum -y update
+#
+# TODO: Disabled for now until we investigate.
+# dnf upgrade --releasever=latest --assumeyes
 
 # Turn on automatic security updates.  There's a chance this will totally
 # break the server if an update goes wrong.  On the other hand, this server
@@ -84,8 +81,9 @@ yum -y update
 # administering it, so it's better to risk downtime than risk getting
 # hacked.
 #
-# TODO: Configure automatic reboot after kernel updates?
-yum -y install yum-cron
+# TODO: This no longer works the same way on AL2023, and needs some
+# non-trivial work.
+# yum -y install yum-cron
 EOD
 
   tags {

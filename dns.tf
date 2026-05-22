@@ -6,15 +6,15 @@ resource "aws_route53_zone" "primary" {
   comment = "Managed via https://github.com/language-learners/terraform/blob/master/dns.tf"
 }
 
-# Our "forum" record.
+# Our "forum" record, sitting behind CloudFront to mitigate bot traffic.
 resource "aws_route53_record" "forum" {
   zone_id = "${aws_route53_zone.primary.zone_id}"
   name    = "forum"
   type    = "A"
 
   alias {
-    name                   = "${aws_lb.web_sites.dns_name}"
-    zone_id                = "${aws_lb.web_sites.zone_id}"
+    name                   = "d3t9mlylurbnjv.cloudfront.net"
+    zone_id                = "Z2FDTNDATAQYW2"
     evaluate_target_health = false
   }
 }

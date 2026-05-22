@@ -27,7 +27,7 @@ data "aws_ami" "ecs_ami" {
     # maybe one time in 4 or 5 updates when deploying to staging clusters.
     # If this happens, you can replace the "*" below with the "2016.09.g"
     # of a known-good AMI.
-    values = ["amzn-ami-*-amazon-ecs-optimized"]
+    values = ["al2023-ami-ecs-hvm-*-kernel-6.1-x86_64"]
   }
 
   filter {
